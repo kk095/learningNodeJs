@@ -6,21 +6,9 @@ module.exports.home = function(req,res){
     res.render("home",{title:'home'});
 }
 module.exports.profile = function(req,res){
-    if(req.cookies.user_id){
-        User.findById(req.cookies.user_id,function(err,user){
-            if(user){
-                return res.render("profile",{
-                    'title':'my profile',
-                    'user':user
-                })
-            }else{
-                return res.redirect('/signin');
-            }
-
-        })
-    }else{
-        return res.redirect('/signin');
-    }
+   return res.render("profile",{
+       'title':'profile'
+   })
     
 }
 module.exports.signin = function(req,res){
@@ -55,32 +43,7 @@ module.exports.create = function(req,res){
     })
 }
 module.exports.login = function(req,res){
-    // fetch login details
-    const login = req.body;
-    // find user
-    User.findOne({email:login.email},function(err,user){
-        if(err){
-            console.log(err);
-            return
-        }
-        // handle user
-        if(user){
-            if(login.password===user.password){
-
-                res.cookie('user_id',user.id);
-            return res.redirect('/profile');
-            }
-            else{
-                console.log("password not match");
-                res.redirect('/');
-            }
-        }
-        else{
-            return redirect("/");
-        }
-        
-    })
-        // handle not user
+    res.end("pending....");
 
 }
 

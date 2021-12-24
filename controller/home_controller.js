@@ -18,32 +18,7 @@ module.exports.signup = function(req,res){
     res.render("signup",{title:'signup'});
 }
 module.exports.create = function(req,res){
-    if(req.body.password!=req.body.confirm_password){
-        res.redirect('/');
-    }
-    User.findOne({email:req.body.email},function(err,user){
-        if(err){
-            console.log(err);
-            return
-        }
-        if(!user){
-            User.create(req.body,function(err,user){
-                if(err){
-                    console.log(err);
-                    return
-                }
-                console.log(user);
-                res.redirect('/signin');
-            });
-        }
-        else{
-            console.log("user exits!");
-            res.redirect("/");
-        }
-    })
-}
-module.exports.login = function(req,res){
-    res.end("pending....");
+    return res.redirect('/');   
 
 }
 

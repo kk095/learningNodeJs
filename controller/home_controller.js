@@ -12,9 +12,15 @@ module.exports.profile = function(req,res){
     
 }
 module.exports.signin = function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/user/profile');
+    }
     res.render("signin",{title:'signin'});
 }
 module.exports.signup = function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/user/profile');
+    }
     res.render("signup",{title:'signup'});
 }
 module.exports.create = function(req,res){

@@ -9,9 +9,20 @@ const passport = require('passport');
 const localPassport = require('./config/passport-local-strategy');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const sassMiddleware = require('node-sass-middleware');
 
 
 app.use(expressLayouts);
+
+// sass setting integration
+app.use(sassMiddleware({
+    src:path.join(__dirname,'./assets/scss'),
+    dest:path.join(__dirname,'./assets/css'),
+    debug:true,
+    prefix:'/css',
+    outputStyle:'expanded'
+})) 
+
 app.use(express.static(path.join( __dirname , './assets')));
 app.use(express.urlencoded());
 app.use(cookieParser());

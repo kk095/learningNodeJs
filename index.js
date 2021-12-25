@@ -8,11 +8,14 @@ const db = require('./config/mongoose');
 const passport = require('passport');
 const localPassport = require('./config/passport-local-strategy');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
 
 app.use(expressLayouts);
 app.use(express.static('./assets'));
 app.use(express.urlencoded());
 app.use(cookieParser());
+
 app.use(session({
     name:'codial',
     secret:'somethingunique',
@@ -20,7 +23,17 @@ app.use(session({
     resave:false,
     cookie:{
         maxAge:(100*60*100)
-    }
+    },
+    store: MongoStore.create(
+        {
+        mongoUrl: 'mongodb://localhost:27017/social',
+        mongooseConnection:db,
+        autoRemove:'disabled'
+        },
+        function(err){
+        console.log(err||'mongostore is connected');
+        }
+    )
 }))
 app.use(passport.initialize());
 app.use(passport.session())

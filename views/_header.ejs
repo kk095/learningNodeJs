@@ -1,3 +1,10 @@
 <h1>
     header
 </h1>
+    <%if(locals.user){%>
+        <li><a href="/user/profile"><%=user.name%></a></li>
+        <li><a href="/user/signout">Signout</a></li>
+    <%}else{%>
+        <li><a href="/signin">Signin</a></li>
+        <li><a href="/signup">Signup</a></li>
+    <%}%>

@@ -12,7 +12,7 @@ const MongoStore = require('connect-mongo');
 
 
 app.use(expressLayouts);
-app.use(express.static('./assets'));
+app.use(express.static(path.join( __dirname , './assets')));
 app.use(express.urlencoded());
 app.use(cookieParser());
 

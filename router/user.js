@@ -15,4 +15,9 @@ router.post('/signup',controller.createNewUser);
 
 router.get('/signout',controller.destroyUserSession);
 
+
+
+
+
+
 module.exports = router;

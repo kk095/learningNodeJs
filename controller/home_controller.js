@@ -1,9 +1,34 @@
 const User = require('../models/user');
+const Post = require('../models/posts');
+const comments = require('../models/comment');
 
 module.exports.home = function(req,res){
-    console.log(req.cookies);
-    res.cookie('check',20);
-    res.render("home",{title:'home'});
+    // console.log(req.cookies);
+    // res.cookie('check',20);
+
+    // Post.find({}).populate('user').exec(function(err,posts){
+    //     if(err){
+    //         console.log("during populating posts ",err);
+    //         return res.redirect("/");
+    //     }
+    //     return res.render("home",{title:'home',posts:posts})
+    // })
+    Post.find({})
+    .populate('user')
+    .populate({
+        path:'comments',
+        populate:{
+            path:'user'
+        }
+    })
+    .exec(function(err,posts){
+        if(err){
+            console.log(err);
+        }
+        return res.render("home",{title:'home',posts:posts})
+        
+    })
+   
 }
 module.exports.profile = function(req,res){
    return res.render("profile",{
@@ -57,4 +82,8 @@ module.exports.createNewUser = function(req,res){
 module.exports.destroyUserSession = function(req,res){
     req.logout();
     res.redirect('/');
+}
+
+module.exports.createPost = function(req,res){
+    
 }

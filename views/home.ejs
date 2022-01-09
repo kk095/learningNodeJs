@@ -14,7 +14,11 @@
         <h4>All Posts</h4>
         <ol>
             <%for( post of posts){%>
-                <li> <a href="">X</a> <%=post.content %></li>
+                <li>
+                    <% if(locals.user && locals.user.id == post.user.id){%>
+                    <a href="/post/remove/<%= post.id %>">X</a>
+                    <%}%>
+                    <%=post.content %></li>
                 <ul>
                     <li><%=post.user.name%></li>
                 </ul>
@@ -30,7 +34,10 @@
                         <p>
                             <% for (comment of post.comments){%>
                             <ul>
-                                <a href="">X</a> <%=comment.content %>
+                                <% if(locals.user && locals.user.id == comment.user.id){%>
+                                    <a href="/comments/remove/<%= comment.id %>">X</a>
+                                    <%}%>
+                                 <%=comment.content %>
                                 <p>
                                     <%=comment.user.name %>
                                 </p>

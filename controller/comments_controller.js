@@ -19,3 +19,15 @@ module.exports.createComment=function(req,res){
 
         })
 }
+
+module.exports.deleteComment = function(req,res){
+    Comments.findById(req.params.id,function(err,comment){
+        if(err){
+            console.log("error during delete comments ",err);
+            return res.redirect("/");
+        }
+        Post.findByIdAndUpdate(comment.post,{$pull:{comments:req.params.id}},function(err){
+            return res.redirect("/");
+        })
+    })
+}

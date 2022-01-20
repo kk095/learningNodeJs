@@ -1,3 +1,14 @@
 body {
   color: orangered;
 }
+
+.img-preview {
+  width: 100px;
+  height: 100px;
+  background-color: #dadada;
+}
+
+.img-preview img {
+  width: 100px;
+  height: 100px;
+}

@@ -10,7 +10,8 @@ const localPassport = require('./config/passport-local-strategy');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const sassMiddleware = require('node-sass-middleware');
-
+const flash = require('connect-flash');
+const flashMiddleware =  require('./config/flash_messages');
 
 app.use(expressLayouts);
 
@@ -23,9 +24,12 @@ app.use(sassMiddleware({
     outputStyle:'expanded'
 })) 
 
+// middleware for ststic files
+app.use('/upload',express.static(path.join(__dirname,"/upload")));
 app.use(express.static(path.join( __dirname , './assets')));
 app.use(express.urlencoded());
 app.use(cookieParser());
+
 
 app.use(session({
     name:'codial',
@@ -50,6 +54,11 @@ app.use(passport.initialize());
 app.use(passport.session())
 
 app.use(passport.setAuthenticatedUser);
+
+// flash messages
+app.use(flash());
+app.use(flashMiddleware.flashMessage);
+
 
 app.use("/",require('./router'));
 

@@ -1,3 +1,13 @@
 body{
     color:orangered
 }
+
+.img-preview{
+    width:100px;
+    height:100px;
+    background-color:rgb(218, 218, 218);
+    img{
+        width:100px;
+        height:100px;
+    }
+}

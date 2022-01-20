@@ -1,33 +1,51 @@
 const Comments = require('../models/comment');
 const Post = require('../models/posts');
 
-module.exports.createComment=function(req,res){
-    Post.findById(req.body.post,function(err,post){
-        if(post){
-            Comments.create({
-                content:req.body.content,
-                user:req.user._id,
-                post:req.body.post
-            },function(err,comment){
-                // if(comment){
-                    post.comments.push(comment);
-                    post.save();
-                    res.redirect('/');
-                // }
-            })
-        }
+module.exports.createComment = async function(req,res){
+    try{
+        let post = await Post.findById(req.body.post);
+        let comment = await Comments.create({
+             content:req.body.content,
+             user:req.user._id,
+             post:req.body.post
+         });
+        post.comments.push(comment);
+        post.save();
+        const newComment = await Comments.findById(comment._id).populate("user",["name","avatar"]);
+         if(req.xhr){
+             return res.status(200).json({
+                 data:newComment,
+                 message:{"success":"comment created!"}
+             })
+         }else{
+             req.flash("success","your comment has posted !")
+             res.redirect('/');
+         }
 
-        })
+    }catch(err){
+        req.flash("error",err);
+        console.log(err);
+        res.redirect("/");
+    }
+    
 }
 
-module.exports.deleteComment = function(req,res){
-    Comments.findById(req.params.id,function(err,comment){
-        if(err){
-            console.log("error during delete comments ",err);
-            return res.redirect("/");
+module.exports.deleteComment = async function(req,res){
+    try{
+        let comment = await Comments.findById(req.params.id);
+        await Post.findByIdAndUpdate(comment.post,{$pull:{comments:req.params.id}});
+        if(req.xhr){
+            return res.status(200).json({
+                data:comment,
+                message:{ "success":"comment deleted !"}
+            })
         }
-        Post.findByIdAndUpdate(comment.post,{$pull:{comments:req.params.id}},function(err){
-            return res.redirect("/");
-        })
-    })
+        req.flash("success","comment has delete");
+        return res.redirect("/");
+
+    }catch(err){
+        req.flash("error",err);
+        res.redirect("/");
+    }
+    
 }

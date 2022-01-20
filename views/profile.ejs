@@ -2,6 +2,20 @@
 <h1>
     social/profile
 </h1>
+<img src="<%=user.avatar%>" alt="no pic" width="100" height="100">
+<h3><%= profile_user.email %></h3>
+<h3><%= profile_user.name%></h3>
+<% if(locals.user.id == profile_user.id ){ %>
+    <h3>Update your details</h3>
+    <form action="/user/update/<%= locals.user.id %>" id="update-info" method="post" enctype="multipart/form-data">
+        <input type="text" placeholder="enter your name" name="name" value="<%= profile_user.name %>">
+        <input type="email" placeholder="enter your email" name="email" value="<%= profile_user.email %>">
+        <input type="file" id="update-avatar" placeholder="upload profile pic" name="avatar">
+        <button type="submit">Submit</button>
+    </form>
+<%}%>
+<div class="img-preview">
+    <img id="preview-pic">
+</div>
 
-<h3><%= user.email %></h3>
-<h3><%= user.name%></h3>
+<script src="/js/profile.js"></script>

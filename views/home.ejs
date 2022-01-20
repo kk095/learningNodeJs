@@ -1,51 +1,33 @@
 <link rel="stylesheet" href="./css/home.css">
-    <h1>home page</h1>
-
-    <section>
-        <h4>Posts</h4>
-        <form action="/post/create" method="post">
-            <textarea name="content" id="post-textarea" cols="30" rows="10">
-
-            </textarea>
-            <button type="submit">Submit</button>
-        </form>
-    </section>
-    <section>
-        <h4>All Posts</h4>
-        <ol>
-            <%for( post of posts){%>
-                <li>
-                    <% if(locals.user && locals.user.id == post.user.id){%>
-                    <a href="/post/remove/<%= post.id %>">X</a>
+    <main>        
+        <section>
+            <h4>Posts</h4>
+            <form action="/post/create" method="post" id="post-form">
+                <textarea name="content" id="post-textarea" cols="30" rows="10">
+                    
+                </textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+        <section>
+            <h4>All Posts</h4>
+            <ol id="ol-posts">
+                <%for( post of posts){%>
+               <%- include("_post") %>
+               <%}%>
+            </ol>
+        </section>
+        
+        <section class="all-user">
+            <h1>All Users List</h1>
+            <ul>
+                <%for(user of users){%>
+                    <li>
+                        <a href="user/profile/<%= user.id%>"><%= user.name%></a>
+                    </li>
                     <%}%>
-                    <%=post.content %></li>
-                <ul>
-                    <li><%=post.user.name%></li>
                 </ul>
-                <div class="post-comments">
-                    <%if(locals.user){%>
-                        <form action="/comments/create" method="post">
-                            <input type="text" name="content" placeholder="write comments">
-                            <input type="hidden" name="post" value="<%= post._id%>">
-                            <button type="submit">Submit</button>
-                        </form>
-                    <%}%>
-                    <div class="comments-box">
-                        <p>
-                            <% for (comment of post.comments){%>
-                            <ul>
-                                <% if(locals.user && locals.user.id == comment.user.id){%>
-                                    <a href="/comments/remove/<%= comment.id %>">X</a>
-                                    <%}%>
-                                 <%=comment.content %>
-                                <p>
-                                    <%=comment.user.name %>
-                                </p>
-                            </ul>
-                            <%}%>
-                        </p>
-                    </div>
-                </div>
-            <%}%>
-        </ol>
-    </section>
+            </section>
+        </main>
+
+<script src="js/home.js"></script>

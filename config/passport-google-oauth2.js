@@ -18,12 +18,14 @@ function(accessToken,refreshToken,profile,done){
         console.log(profile);
         if(user){
             return done(null,user);
+
         }
         else{
             User.create({
                 name : profile.displayName,
                 email : profile.emails[0].value,
                 password : crypto.randomBytes(20).toString("hex"),
+                avatar : profile.photos[0].value
             },function(err,user){
                 if(err){
                     console.log("error in creating user in  google auth passport",err);

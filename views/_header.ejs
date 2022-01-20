@@ -3,6 +3,9 @@
         header
     </h1>
     <%if(locals.user){%>
+    <img style="border-radius: 50%; float: right;" src="<%=user.avatar%>" alt="no-img" width="80" height="80">
+    <%}%>
+    <%if(locals.user){%>
         <li><a href="/user/profile/<%=user.id %>"><%=user.name%></a></li>
         <li><a href="/user/signout">Signout</a></li>
         <%}else{%>

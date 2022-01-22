@@ -98,7 +98,7 @@ jQuery(function($){
                         console.log(data);
                         commentDom(data.data);
                         notification(data.message);
-                        $(e.target.content).val("");
+                        // $(e.target.content).val("");
                     },
                     error:function(err){
                         console.log(err.responseText);

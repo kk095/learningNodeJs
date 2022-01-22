@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const User = require('../models/user');
-const Post = require('../models/posts');
+const ResetPassword = require('../models/resetPassword');
+const crypto = require('crypto');
+const queue = require('../config/kue');
+const passwordResetWorker = require('../worker/passwordReset_mailer');
 
 module.exports.profile = async function (req, res) {
     try {
@@ -74,7 +77,10 @@ module.exports.update = async function (req, res) {
                         }
                         else{
                                 user.avatar = User.avatarPath + "/" + req.file.filename;
-                         }
+                            }
+                        }
+                        else{
+                        user.avatar = User.avatarPath + "/" + req.file.filename;
                     }
                 }
                 user.save();
@@ -85,5 +91,93 @@ module.exports.update = async function (req, res) {
 
     } catch (err) {
         console.log(err);
+    }
+}
+
+module.exports.forgetPassword = function(req,res){
+   return res.render("forget_password",{title:"Forget Password",layout:false});
+}
+
+module.exports.resetPassword = async function (req,res){
+    try{
+    let user = await User.findOne({email : req.body.email});
+        if(user){
+           let token = await ResetPassword.findOne({user:user});
+                if(token){
+                    token.token = crypto.randomBytes(20).toString("hex");
+                    token.isValid = true;
+                    await token.save();
+                    let requestedUser = await ResetPassword.findById(token._id).populate("user",["name","email"]);
+                    let job = queue.create("resetEmails",requestedUser).save(function(err){
+                        if(err){
+                            console.log("error in reset controller ",err);
+                        }
+                    })
+                }
+                else{
+                        let newtoken = await ResetPassword.create({
+                        user : user._id,
+                        token : crypto.randomBytes(20).toString("hex"),
+                        isValid : true
+                    });
+                    let requestedUser = await ResetPassword.findById(newtoken._id).populate("user",["name","email"]);
+                    let job = queue.create("resetEmails",requestedUser).save(function(err){
+                    if(err){
+                        console.log("error in reset controller ",err);
+                    }
+            })
+                }
+            
+            req.flash("success","password reset link has been sent to your email");
+            return res.redirect('/');
+        }
+        else{
+            req.flash("error" , "Email didn't match with any User ");
+            return res.redirect("/");
+        }
+
+    }catch(err){
+        console.log("error in finding user during reset password",err);
+            return;
+    }
+    
+}
+
+module.exports.resetPasswordUsingToken = function(req,res){
+    ResetPassword.findOne({token:req.params.token},function(err,data){
+        if(err){
+            console.log(err);
+            return;
+        }
+        return res.render("resetPasswordUsingToken",{layout:false,user:data});
+    })
+}
+module.exports.newpassword = function(req,res){
+    console.log(req.body);
+    if(req.body.password == req.body.passwordAgain){
+        User.findByIdAndUpdate(req.body.user,{
+            password : req.body.password
+        },function(err,data){
+            if(err){
+                console.log(err);
+                return
+            }
+            ResetPassword.findOne({token:req.body.token},function(err,token){
+                if(err){
+                    console.log(err);
+                    return
+                }
+                if(token){
+                    token.isValid =false;
+                    token.save();
+                }
+            })
+            req.flash("success","your password has been reset")
+            return res.redirect('/');
+        })
+    }
+    else{
+        req.flash("error","your confirm password is not matching ");
+        return res.redirect("/");
     }
 }

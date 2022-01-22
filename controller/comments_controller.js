@@ -1,5 +1,8 @@
 const Comments = require('../models/comment');
 const Post = require('../models/posts');
+const commentMail = require('../mailer/comment_mailer');
+const queue = require('../config/kue');
+const commentEmailWorker = require('../worker/comment_mailer_worker');
 
 module.exports.createComment = async function(req,res){
     try{
@@ -11,7 +14,15 @@ module.exports.createComment = async function(req,res){
          });
         post.comments.push(comment);
         post.save();
-        const newComment = await Comments.findById(comment._id).populate("user",["name","avatar"]);
+        const newComment = await Comments.findById(comment._id).populate("user",["name","avatar","email"]);
+        //  commentMail.commentMail(newComment);
+        let job = queue.create("emails",newComment).save(function(err){
+            if(err){
+                console.log("error in assinging job",err);
+                return;
+            }
+            console.log("job id is ", job.id);
+        })
          if(req.xhr){
              return res.status(200).json({
                  data:newComment,

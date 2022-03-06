@@ -4,6 +4,7 @@ const comments = require('../models/comment');
 const { findById } = require('../models/user');
 const fs = require('fs');
 const path = require('path');
+const Chats = require('../models/chats');
 
 module.exports.home = async function (req, res) {
 
@@ -14,12 +15,12 @@ module.exports.home = async function (req, res) {
             .populate({
                 path: 'comments',
                 populate: {
-                    path: 'user'
+                    path: 'user',
                 }
-            })
-
+            });
         let users = await User.find({});
-        return res.render("home", { title: 'home', posts: posts, 'users': users })
+        let chats = await Chats.find({}).populate("user","email");
+        return res.render("home", { title: 'home', posts: posts, 'users': users,"chats":chats })
 
     } catch (err) {
         console.log("error ", err);

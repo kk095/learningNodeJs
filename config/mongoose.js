@@ -1,5 +1,5 @@
 const express = require('express');
-
+const env = require('./environment');
 const mongoose = require('mongoose');
 
 main().then(()=>{
@@ -7,5 +7,5 @@ main().then(()=>{
 }).catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/social');
+  await mongoose.connect(`mongodb://localhost:27017/${env.db}`);
 }

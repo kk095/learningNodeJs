@@ -2,7 +2,7 @@
 <h1>
     social/profile
 </h1>
-<img src="<%=user.avatar%>" alt="no pic" width="100" height="100">
+<img src="<%=profile_user.avatar%>" alt="no pic" width="100" height="100">
 <h3><%= profile_user.email %></h3>
 <h3><%= profile_user.name%></h3>
 <% if(locals.user.id == profile_user.id ){ %>
@@ -13,9 +13,19 @@
         <input type="file" id="update-avatar" placeholder="upload profile pic" name="avatar">
         <button type="submit">Submit</button>
     </form>
+    <div class="img-preview">
+        <img id="preview-pic">
+    </div>
+<%}else{%>
+    <a href="/user/friend/<%=profile_user._id%>" id="add-friend-btn">Add Friend</a>
 <%}%>
-<div class="img-preview">
-    <img id="preview-pic">
-</div>
-
+<h1>friends</h1>
+<%for(friend of profile_user.friends){
+    if(friend.to_user._id == profile_user.id){%>
+        <h5><%=friend.from_user.name%></h5>
+    <%}else{%>
+        
+        <h5><%=friend.to_user.name%></h5>
+ 
+    <%}}%>
 <script src="/js/profile.js"></script>

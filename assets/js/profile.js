@@ -13,4 +13,18 @@ jQuery(function($){
             console.log("no..")
         }
     })
+    $("#add-friend-btn").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            type : "post",
+            url : $("#add-friend-btn").attr("href"),
+            success : function(data){
+                console.log(data);
+                console.log("friendship setup!");
+            },
+            error : function(err){
+                console.log(err.responseText);
+            } 
+        })
+    })
 })

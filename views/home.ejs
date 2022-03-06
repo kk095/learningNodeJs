@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="./css/home.css">
-    <main>        
+    <main>
         <section>
             <h4>Posts</h4>
             <form action="/post/create" method="post" id="post-form">
@@ -21,13 +21,23 @@
         <section class="all-user">
             <h1>All Users List</h1>
             <ul>
-                <%for(user of users){%>
+                <%for(let user of users){%>
                     <li>
                         <a href="user/profile/<%= user.id%>"><%= user.name%></a>
                     </li>
                     <%}%>
                 </ul>
-            </section>
+        </section>
         </main>
+        <%-include("_chat_box")%>
+        <script src="js/likes.js"></script>
+        <script src="js/postComment.js"></script>
+        <script src="js/home.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="js/chatEngine.js"></script>
 
-<script src="js/home.js"></script>
+        <%if(locals.user){ %>
+            <script >
+                new chatEngine("chatBox-<%=locals.user.id%>","<%=locals.user.email%>");
+                </script>
+        <%}%>

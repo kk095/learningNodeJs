@@ -1,25 +1,35 @@
 <li id="li-<%=post.id%>">
-    <% if(locals.user && locals.user.id == post.user.id){%>
-    <a class="post-delete" data-postid="<%=post._id%>" href="/post/remove/<%= post.id %>">X</a>
-    <%}%>
-    <%=post.content %> <br>
-     <%=post.user.name%>
+    <% if(locals.user && locals.user.id==post.user.id){%>
+        <a class="post-delete" data-postid="<%=post._id%>" href="/post/remove/<%= post.id %>">X</a>
+        <%}%>
+            <%=post.content %> <br>
+                <%=post.user.name%>
+                    <br>
+                    <% if(locals.user){ %>
+                        <a class="like-btn" href="/like/toggle/?id=<%=post.id%>&type=post"
+                            data-likes="<%=post.likes.length%>">
+                            <%=post.likes.length%> Likes
+                        </a>
+                        <%}else{%>
+                            <div>
+                                <%=post.likes.length%> Likes
+                            </div>
+                            <%}%>
+                                <div class="post-comments">
+                                    <%if(locals.user){%>
+                                        <form class="comment-form" id="commentform-<%=post.id%>" action="/comments/create" method="post">
+                                            <input type="text" name="content" placeholder="write comments">
+                                            <input type="hidden" name="post" value="<%= post._id%>">
+                                            <button type="submit">Submit</button>
+                                        </form>
+                                        <%}%>
+                                            <div class="comments-box">
+                                                <ul id="ul-comments-<%=post.id%>">
 
-<div class="post-comments">
-    <%if(locals.user){%>
-        <form class="comment-form" action="/comments/create" method="post">
-            <input type="text" name="content" placeholder="write comments">
-            <input type="hidden" name="post" value="<%= post._id%>">
-            <button type="submit">Submit</button>
-        </form>
-    <%}%>
-    <div class="comments-box">
-            <ul>
-
-                <% for (comment of post.comments){%>
-                    <%- include("_comments") %>
-                    <%}%>
-            </ul>
-    </div>
-</div>
+                                                    <% for (comment of post.comments){%>
+                                                        <%- include("_comments") %>
+                                                            <%}%>
+                                                </ul>
+                                            </div>
+                                </div>
 </li>

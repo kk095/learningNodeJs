@@ -14,5 +14,7 @@ router.use('/comments',require('./comments'));
 router.get('/signup',controller.signup);
 router.get('/signin',controller.signin);
 router.use('/api',require("./api"));
+router.use('/like',require("./likes"));
+router.use('/chats',require("./chats"));
 
 module.exports = router;

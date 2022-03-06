@@ -1,9 +1,8 @@
-const express = require('express');
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const AVATAR_PATH = path .join("/upload/user/avatar");
-const Schema =  moongose.Schema;
+const Schema =  mongoose.Schema;
 
 const user = new Schema({
     name:{
@@ -21,7 +20,13 @@ const user = new Schema({
     },
     avatar:{
         type:String,
-    }
+    },
+    friends : [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Friendship'
+        }
+    ]
 
 },{
     timestamps:true
@@ -40,6 +45,6 @@ const storage = multer.diskStorage({
 user.statics.uploadedAvatar = multer({storage:storage}).single('avatar');
 user.statics.avatarPath = AVATAR_PATH;
 
-const User = moongose.model("user",user);
+const User = mongoose.model("user",user);
 
 module.exports = User

@@ -21,6 +21,7 @@ router.get('/forget_password',controller.forgetPassword);
 router.post('/reset_password',controller.resetPassword);
 router.get('/reset-password/:token',controller.resetPasswordUsingToken);
 router.post('/new-password',controller.newpassword);
+router.post('/friend/:id',controller.friendship);
 
 
 

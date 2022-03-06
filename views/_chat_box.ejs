@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/css/chatbox.css">
+
+<%if(locals.user){%>
+    <div id="chatBox-<%=user.id%>" class="chat-box">
+        <a href="" id="chat-box-cancel">X</a>
+        <div class="messages-container">
+            <ul id="chat-msg">
+                <% for(let chat of chats){%>
+                <%if(chat.user.email==locals.user.email){%>
+                    <li class="self-msg">
+                        <%=chat.message%>
+                        <br>
+                        <sub>
+                            <%=chat.user.email%>
+                        </sub>
+                    </li>
+                <%}else{%>
+                    <li class="other-msg">
+                        <%=chat.message%>
+                        <br>
+                        <sub>
+                            <%=chat.user.email%>
+                        </sub> 
+                    </li>
+                <%}}%>
+            </ul>
+        </div>
+        <div class="chat-form">
+            <input type="text" name="chat" id="new-chat">
+            <button id="chat-submit">Send</button>
+        </div>
+    </div>
+    <%}%>
+
+    <script src="js/chatbox.js"></script>

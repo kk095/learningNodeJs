@@ -1,12 +1,61 @@
-jQuery(function($){
-    let removeLink = $(".post-delete");
+jQuery(function(){
+    class PostOperations{
+        constructor(post){
+            this.post = post;
+            this.removePost();
+        }
+        // to delete the post
+        removePost(){
+            let removeBtn = $(".post-delete",this.post);
+            $(removeBtn[0]).click(function(e){
+                e.preventDefault();
+                $.ajax({
+                    type:'get',
+                    url: $(this).attr("href"),
+                })
+                .done(function(data){
+                    console.log($(`#li-${data.data._id}`));
+                    $(`#li-${data.data._id}`).remove()
+                    notification(data.message);
 
-    removeLink.click(function(e){
-        postRemove(e);
-    })
+                }) 
+                .fail(function(err){
+                    console.log(err.responseText);
+                })
+            })
+        }
+    }
 
+
+    // to create new post
+    let postCreate = function(){
+        let newForm = $("#post-form");
+        newForm.submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'/post/create',
+                data: newForm.serialize(),
+            })
+            .done(function(data){
+                $("#post-form textarea").val("");
+                notification(data.message);
+                let postList = $("#ol-posts");
+                let newList =  newPostDom(data.data.post);
+                postList.prepend(newList);
+                new PostOperations(newList);
+                let postLike = $(`#li-${data.data.post._id}>.like-btn`);
+                console.log(postLike);
+                new Likes(postLike);
+            })
+            .fail(function(err){
+                console.log(err.responseText);
+            })
+        })
+    }
+
+    // to send notification 
     let notification=function(msg){
-        console.log(Object.keys(msg)[0]);
         new Noty({
             type: `${Object.keys(msg)[0]}`,
             layout: 'topRight',
@@ -15,43 +64,16 @@ jQuery(function($){
             timeout:1500
         }).show();
     }
-
-    let postCreate = function(){
-        let newForm = $("#post-form");
-        newForm.submit(function(e){
-            console.log(newForm.serialize())
-            e.preventDefault();
-            $.ajax({
-                type:'POST',
-                url:'/post/create',
-                data: newForm.serialize(),
-                success:function(data){
-                    $("#post-form textarea").val("");
-                    console.log(data);
-                    notification(data.message);
-                    let postList = $("#ol-posts");
-                    let newList =  newPostDom(data.data.post);
-                    console.log("new post detail :",data.data);
-                    postList.prepend(newList);
-                    $(" .post-delete",newList).click(function(e){
-                        postRemove(e);
-                    })
-                },
-                error:function(error){
-                   
-                }
-            })
-            
-        })
-    }
-    postCreate();
-
+    
+    // to create new list for new post
     let newPostDom = function(post){
         let newDom = $(`
             <li id="li-${post._id}">
                 <a class="post-delete"  data-postid="${post._id}>" href="/post/remove/${post._id}">X</a>
                 ${post.content} <br>
                 ${post.user.name}
+                <br>
+                <a class="like-btn" href="/like/toggle/?id=${post._id}&type=post" data-likes="${post.likes.length}" >${post.likes.length} Likes</a>
             
             <div class="post-comments">
                 <form action="/comments/create" method="post">
@@ -60,7 +82,7 @@ jQuery(function($){
                     <button type="submit">Submit</button>
                 </form>
             <div class="comments-box">
-                <p> </p>
+                <ul id="ul-comments-${post._id}" ></ul>
             </div>
             </div>
             </li>`
@@ -68,87 +90,33 @@ jQuery(function($){
         return newDom;
     }
 
-    let postRemove = function(e){
-        e.preventDefault();
-        postId = $(e.target).data("postid");
-        $.ajax({
-            type:'get',
-            url: `${$(e.target).prop("href")}`,
-            success:function(data){
-                console.log(data);
-                lstRemove(data.data._id);
-                notification(data.message);
-            },
-            error:function(err){
-                console.log(err.responseText);
-            }
-        })   
-    }
 
-    let commentPost = function(){
-        let commentForm = $(".comment-form");
-            commentForm.submit(function(e){
-                e.preventDefault();
-                console.log(e.target.content);
-                $.ajax({
-                    type:"post",
-                    url:"/comments/create",
-                    data:$(e.target).serialize(),
-                    success:function(data){
-                        console.log(data);
-                        commentDom(data.data);
-                        notification(data.message);
-                        // $(e.target.content).val("");
-                    },
-                    error:function(err){
-                        console.log(err.responseText);
-                        commentPost();
-                    }
-                })
-            })
 
-    }
-    commentPost();
-
-    let commentDom = function(data){
-        let ul = $(`#li-${data.post} .comments-box ul`);
-        console.log(ul);
-        const newComment = `
-                            <li id="li-${data._id}">
-                                <a href="/comments/remove/${data._id}" class="comment-destroy">X</a>
-                                ${data.content} <br>    
-                               ${data.user.name}
-                            </li>
-                            <br>
-        `
-
-        ul.append(newComment)
-    }
+   
 
     let commentDelete = function(){
-        $(".comment-destroy").click(function(e){
-            e.preventDefault();
-            const url = $(this).attr("href");
-            console.log(url);
-            $.ajax({
-                type:'get',
-                url:url,
-                success:function(data){
-                    console.log(data);
-                    lstRemove(data.data._id);
-                    notification(data.message);
-                }
-            })
-        })
+       
     }
     commentDelete();
 
-    let lstRemove = function(id){
-        console.log(id);
-       let lst =  $(`#li-${id}`);
-       console.log(lst);
-       lst.remove();
-    }
-    
+   
 
-})
+
+// loop over all the exiting posts
+let home = function(){
+    let posts = $("#ol-posts>li");
+    posts.each(function(idx,post){
+        new PostOperations(post);
+        let postId = $(post).attr("id").split("-")[1];
+            new postComment(postId);
+            
+            
+    });
+
+    $(".like-btn").each(function(idx,ele){
+        new Likes($(ele));
+    });
+}
+home();
+postCreate(); 
+});

@@ -5,11 +5,25 @@ const ResetPassword = require('../models/resetPassword');
 const crypto = require('crypto');
 const queue = require('../config/kue');
 const passwordResetWorker = require('../worker/passwordReset_mailer');
+const Friendship = require('../models/friendship');
 
 module.exports.profile = async function (req, res) {
     try {
-        let user = await User.findById(req.params.id);
-
+        let user = await User.findById(req.params.id).populate({
+           path :  "friends",
+           populate : {
+               path : "to_user",
+               select : 'name email'
+            },
+            
+        }).populate({
+            path : "friends",
+            populate : {
+                path : "from_user",
+                select : 'name email'
+            }
+        })
+        console.log(user);
         return res.render("profile", {
             'title': 'profile',
             'profile_user': user
@@ -180,4 +194,45 @@ module.exports.newpassword = function(req,res){
         req.flash("error","your confirm password is not matching ");
         return res.redirect("/");
     }
+}
+
+module.exports.friendship = async function(req,res){
+        try{
+            let friend = await User.findById(req.params.id);
+            let newfriend;
+            let relation1 = await Friendship.findOne({
+                to_user : req.user._id,
+                from_user : friend._id
+            });
+            let relation2 = await Friendship.findOne({
+                to_user : friend._id,
+                from_user :req.user._id
+            });
+            if(relation1|| relation2){
+                    console.log("frienship is already present");
+            }
+            else{
+                    newfriend = await Friendship.create({
+                        "from_user" : req.user._id,
+                        "to_user" : friend._id,
+                    });
+                    let currentUser = await User.findById(req.user.id);
+                    friend.friends.push(newfriend);
+                    currentUser.friends.push(newfriend);
+                    friend.save();
+                    currentUser.save();
+                    console.log(newfriend);
+            }
+            if(req.xhr){
+                    return res.status(200).json({
+                        "message" : "successful",
+                        data : newfriend
+                    });
+            }
+                return res.redirect("/");
+        }catch(err){
+            console.log(err);
+            return;
+        }
+
 }

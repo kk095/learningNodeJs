@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/css/chatbox.css">
+<link rel="stylesheet" href="<%=assetPath('css/chatbox.css')%>">
 
 <%if(locals.user){%>
     <div id="chatBox-<%=user.id%>" class="chat-box">
@@ -32,4 +32,4 @@
     </div>
     <%}%>
 
-    <script src="js/chatbox.js"></script>
+    <script src="<%=assetPath('js/chatbox.js')%>"></script>

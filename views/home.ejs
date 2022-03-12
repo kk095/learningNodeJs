@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="./css/home.css">
+<link rel="stylesheet" href="<%=assetPath('css/home.css')%>">
     <main>
         <section>
             <h4>Posts</h4>
@@ -30,11 +30,11 @@
         </section>
         </main>
         <%-include("_chat_box")%>
-        <script src="js/likes.js"></script>
-        <script src="js/postComment.js"></script>
-        <script src="js/home.js"></script>
+        <script src="<%=assetPath('js/likes.js')%>"></script>
+        <script src="<%=assetPath('js/postComment.js')%>"></script>
+        <script src="<%=assetPath('js/home.js')%>"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js" integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="js/chatEngine.js"></script>
+        <script src="<%=assetPath('js/chatEngine.js')%>"></script>
 
         <%if(locals.user){ %>
             <script >

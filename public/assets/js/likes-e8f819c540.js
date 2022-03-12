@@ -1,0 +1,1 @@
+class Likes{constructor(t){this.ele=t,this.toggleLike()}toggleLike(){this.ele.click((function(t){t.preventDefault();let e=this;$.ajax({type:"POST",url:$(e).attr("href")}).done((function(t){let i=parseInt($(e).attr("data-likes"));t.data.exits?i-=1:i+=1,$(e).attr("data-likes",i),$(e).html(`${i} Likes`)})).fail((function(t){console.log(t.responseText)}))}))}}

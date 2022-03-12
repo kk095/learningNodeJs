@@ -1,0 +1,12 @@
+body{
+    color:#ff4500
+}
+
+.img-preview{
+    background-color:#dadada
+}
+
+.img-preview,.img-preview img{
+    width:100px;
+    height:100px
+}

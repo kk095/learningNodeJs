@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const logger = require('morgan');
 const env = require('./config/environment');
+require('./config/helper')(app);
 const port = 8000;
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
@@ -42,7 +43,7 @@ app.use(logger(env.morgan.mode,env.morgan.options));
 
 // middleware for static files
 app.use('/upload',express.static(path.join(__dirname,"/upload")));
-app.use(express.static(path.join( __dirname , env.asset_path )));
+app.use(express.static(env.asset_path ));
 app.use(express.urlencoded());
 app.use(cookieParser());
 

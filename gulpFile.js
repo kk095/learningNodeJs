@@ -39,7 +39,7 @@ gulp.task('images',function(done){
 })
 gulp.task('js',function(done){
     console.log("minifying js....");
-    gulp.src("assets/js/**/*.js")
+    gulp.src("./assets/**/*.js")
     .pipe(uglify())
     .pipe(gulpRev())
     .pipe(gulp.dest("./public/assets"))

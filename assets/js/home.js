@@ -4,7 +4,6 @@ jQuery(function(){
             this.post = post;
             this.removePost();
         }
-        // to delete the post
         removePost(){
             let removeBtn = $(".post-delete",this.post);
             $(removeBtn[0]).click(function(e){
@@ -27,7 +26,6 @@ jQuery(function(){
     }
 
 
-    // to create new post
     let postCreate = function(){
         let newForm = $("#post-form");
         newForm.submit(function(e){
@@ -54,7 +52,6 @@ jQuery(function(){
         })
     }
 
-    // to send notification 
     let notification=function(msg){
         new Noty({
             type: `${Object.keys(msg)[0]}`,

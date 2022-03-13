@@ -64,9 +64,7 @@ const production = {
    
 }
 
-console.log(process.env.CODIAL_ASSET_PATH);
-console.log(process.env.CODIAL_DB);
+
 
 module.exports= eval(process.env.CODIAL_ENVIRONMENT== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT));
 
-// module.exports = development;

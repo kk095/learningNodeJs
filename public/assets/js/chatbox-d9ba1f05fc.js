@@ -1,1 +1,0 @@
-$("#chat-box-cancel").click((function(t){t.preventDefault();let c=$(".chat-box");console.log(c),c.toggleClass("chat-box-cancel"),"X"==$(this).html()?$(this).html("&#8593").css({"font-size":"2rem",top:"-100%"}):$(this).html("X").css({top:"-5%","font-size":"1rem"})}));

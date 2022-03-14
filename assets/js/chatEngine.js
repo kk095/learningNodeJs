@@ -2,7 +2,7 @@ class chatEngine{
     constructor(chatboxId,useremail){
         this.chatbox = $(`#${chatboxId}`);
         this.userEmail = useremail;
-        this.socket = io.connect("http://127.0.0.1:5000",{
+        this.socket = io.connect("http://54.234.64.30/:5000",{
             withCredentials : true
         });
         if(this.userEmail){

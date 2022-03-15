@@ -39,7 +39,7 @@ const development = {
 
 const production = {
     name : 'production',
-    asset_path : process.env.CODIAL_ASSET_PATH,
+    asset_path : process.env.CODIAL_ASSET_PATH ,
     session_secret : process.env.CODIAL_SESSION_SECRET ,
     db : process.env.CODIAL_DB ,
     smtp : {
@@ -64,8 +64,6 @@ const production = {
    
 }
 
-// console.log("my mame krishan hgchfygffy yf utrd jyuyy" );
 
-// module.exports= eval(process.env.NODE_ENV)== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT);
-module.exports = production;
+module.exports= eval(process.env.NODE_ENV)== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT);
 

@@ -64,8 +64,9 @@ const production = {
    
 }
 
-console.log("production :- ",production);
+// console.log("production :- ",production);
+console.log(module.exports= eval(process.env.NODE_ENV)== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT));
 
-// module.exports= eval(process.env.NODE_ENV)== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT);
-module.exports = production;
+module.exports= eval(process.env.NODE_ENV)== undefined ? development : eval(process.env.CODIAL_ENVIRONMENT);
+// module.exports = production;
 

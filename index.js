@@ -43,7 +43,7 @@ app.use(logger(env.morgan.mode,env.morgan.options));
 
 // middleware for static files
 app.use('/upload',express.static(path.join(__dirname,"/upload")));
-app.use(express.static('./public/assets'));
+app.use(express.static(env.asset_path));
 app.use(express.urlencoded());
 app.use(cookieParser());
 
